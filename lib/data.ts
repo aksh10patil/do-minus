@@ -3,73 +3,108 @@ export type PropertyType = 'Guesthouse' | 'Mountain Retreat' | 'Lake Experience'
 export interface Property {
   id: string;
   name: string;
+  address: string; // Added address field
   slug: string;
   type: PropertyType;
   description: string;
   priceStart: string;
-  mapX: number; // Percentage from left (0-100)
-  mapY: number; // Percentage from top (0-100)
-  image: string; // URL
+  image: string;
   highlights: string[];
-  lat: number;
-  lng: number;
+  mapCoordinates: {
+    x: number; 
+    y: number; 
+  };
 }
 
 export const properties: Property[] = [
   {
     id: '1',
-    name: 'CA SPONTOI',
-    slug: 'CA_SPONTOI',
-    type: 'Lake Experience',
-    description: 'A calm wellness oasis overlooking Lago Maggiore. Features minimalist architecture and thermal baths.',
-    priceStart: 'CHF 450',
-    mapX: 35, // 35% from left
-    mapY: 60, // 60% from top (Locarno area)
+    name: "Ca' Spontoi",
+    address: "Spontoi 19, 6525 Gnosca",
+    slug: 'ca-spontoi',
+    type: 'Mountain Retreat', 
+    description: 'A historic stone rustic house in Gnosca, offering a raw and authentic Swiss valley experience.',
+    priceStart: 'CHF 220',
     image: '/properties/ca_spontoi.jpg',
-    highlights: ['Infinity Pool', 'Private Spa Suites'],
-    lat: 46.1738,
-    lng: 8.7954,
+    highlights: ['Rustic Stone', 'Valley Views'],
+    mapCoordinates: { x: 27, y: 55 }
   },
   {
-    id: '2',
-    name: 'CA PÖLETE',
-    slug: 'CA_PÖLETE',
-    type: 'Mountain Retreat',
-    description: 'Alpine luxury meets Asian grace. High altitude serenity with world-class skiing and spa facilities.',
-    priceStart: 'CHF 850',
-    mapX: 55,
-    mapY: 20, // Northern Alps
+   id: '2',
+    name: "Ca' Pölete",
+    address: "er Cará de Pedmúnt 7, 6513 Monte Carasso",
+    slug: 'ca-polete',
+    type: 'Guesthouse', 
+    description: 'Charming accommodation in the heart of Monte Carasso, perfect for exploring the castles and local grottoes.',
+    priceStart: 'CHF 180',
     image: '/properties/ca_polete.jpeg',
-    highlights: ['Michelin Dining', 'Hydrotherapy'],
-    lat: 46.6358,
-    lng: 8.5947,
+   highlights: ['Village Life', 'Near Cable Car'],
+    mapCoordinates: { x: 78, y: 48 }
   },
   {
-    id: '3',
-    name: 'CA PEDROT',
-    slug: 'CA_PEDROT',
-    type: 'Guesthouse',
-    description: 'A historic estate surrounded by vineyards and private beaches. True "Farm to Table" luxury.',
-    priceStart: 'CHF 620',
-    mapX: 40,
-    mapY: 65, // Ascona
+   id: '3',
+    name: "Ca' Pedrott",
+    address: "Monti Mornera, 6513 Monte Carasso",
+    slug: 'ca-pedrott',
+    type: 'Mountain Retreat', 
+    description: 'High-altitude tranquility in Mornera. Accessible by cable car, offering breathtaking panoramic views.',
+    priceStart: 'CHF 250',
     image: '/properties/ca_pedrot.jpeg',
-    highlights: ['Private Beach', 'Vineyards'],
-    lat: 46.1554,
-    lng: 8.7753,
+    highlights: ['Panoramic Views', 'Hiking Trails'],
+    mapCoordinates: { x: 52, y: 28 }
   },
   {
-    id: '4',
-    name: 'Barca Winga',
-    slug: 'Barca_Winga',
-    type: 'Lake Experience',
-    description: 'Belle Époque elegance in Lugano. A timeless classic offering panoramic lake views.',
-    priceStart: 'CHF 500',
-    mapX: 65,
-    mapY: 80, // Lugano
+   id: '4',
+    name: "Barca Winca",
+    address: "Porto Mappo, 6598 Minusio",
+    slug: 'barca-winca',
+    type: 'Lake Experience', 
+    description: 'A unique waterside experience at Porto Mappo. Enjoy the breeze of Lake Maggiore.',
+    priceStart: 'CHF 300',
     image: '/properties/barca_winga.jpg',
-    highlights: ['Fine Dining', 'Lake Terrace'],
-    lat: 45.9961,
-    lng: 8.9482,
+    highlights: ['Lakefront', 'Marina Life'],
+   mapCoordinates: { x: 44, y: 72 }
   },
+];
+
+
+
+
+
+
+
+export const properties_new = [
+  {
+    id: 1,
+    name: "CA' SPONTOI",
+    type: "Guesthouse & Mini Spa",
+    address: "Spontoi 19, 6520 Gnosca",
+    description: "A historic retreat nestled in the mountains.",
+    // Using a placeholder that looks like a stone mountain house
+    image: '/properties/ca_spontoi.jpg',
+  },
+  {
+    id: 2,
+    name: "CA' PÖLETE",
+    type: "Guesthouse & Mini Spa",
+    address: "Er Carà de Pedmunt 7, 6513 Monte Carasso",
+    description: "Traditional Ticino architecture with modern luxury.",
+    image: '/properties/ca_polete.jpeg',
+  },
+  {
+    id: 3,
+    name: "CA' PEDROT",
+    type: "Mountain Cottage & Mini Spa",
+    address: "Monti di Mornera, 6513 Monte Carasso",
+    description: "Exclusive mountain cottage for complete isolation.",
+    image: '/properties/ca_pedrot.jpeg',
+  },
+  {
+    id: 4,
+    name: "BARCA WINGA",
+    type: "Sailboat",
+    address: "Porto Mappo, 6598 Minusio",
+    description: "A unique night aboard a sailboat on the lake.",
+    image: '/properties/barca_winga.jpg',
+  }
 ];

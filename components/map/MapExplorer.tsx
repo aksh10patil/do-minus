@@ -1,29 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Property, properties } from '@/lib/data';
-import { TicinoSVG } from './TicinoSVG';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { properties, Property } from '@/lib/data';
 import { MapMarker } from './MapMarker';
-import { 
-  Drawer, 
-  DrawerContent, 
-  DrawerHeader, 
-  DrawerTitle, 
-  DrawerDescription,
-  DrawerFooter,
-  DrawerClose
-} from "@/components/ui/drawer"; 
-import { Button } from '@/components/ui/button';
 
 export default function MapExplorer() {
-  const [selectedProp, setSelectedProp] = useState<Property | null>(null);
-  const [hoveredProp, setHoveredProp] = useState<Property | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Simple Mobile Detection (for interaction logic)
+  // --- MOBILE CHECK ---
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -31,131 +19,133 @@ export default function MapExplorer() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // --- 3D TILT INTERACTION SETUP ---
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current || isMobile) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   const handleMarkerClick = (property: Property) => {
-    if (isMobile) {
- 
-      setSelectedProp(property);
-    } else {
-     
-      window.location.href = `/properties/${property.slug}`;
-    }
+    setSelectedProperty(property);
   };
 
   return (
-    <div className="relative w-full h-full bg-[#FAF9F6] overflow-hidden flex flex-col items-center justify-center">
+    <div 
+      // Ensure this is pure black
+      className="w-full h-full bg-black relative overflow-hidden flex items-center justify-center perspective-1000"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
       
-      {/* Map Container: Scrollable on mobile, Fixed on Desktop */}
-      <div className="relative w-full h-[60vh] md:h-[80vh] md:w-[80vw] max-w-6xl overflow-auto md:overflow-visible no-scrollbar touch-pan-x touch-pan-y">
+      {/* Container Frame with 3D Tilt */}
+      <motion.div 
+        ref={containerRef}
+        className="relative w-full h-full max-w-5xl max-h-[80vh] aspect-[4/3] mx-auto transition-all duration-200 ease-out"
+        style={{ 
+          rotateX: isMobile ? 0 : rotateX, 
+          rotateY: isMobile ? 0 : rotateY,
+          transformStyle: "preserve-3d"
+        }}
+      >
         
-        {/* Aspect Ratio Container for Map */}
-        <div className="relative min-w-[150%] md:min-w-full aspect-[4/3] md:aspect-[16/9] shadow-2xl rounded-3xl overflow-hidden border border-[#E6DFD5] bg-[#F5F3EF]">
-          
-          <TicinoSVG />
+        {/* The Map Background Layer */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          // REMOVED: border-black (it blends with bg-black anyway)
+          // ADDED: border-white/10 to give a subtle edge definition against the black bg
+          className="relative w-full h-full overflow-hidden shadow-2xl"
+          style={{ transform: "translateZ(-20px)" }} 
+        >
+          <Image
+            src="/map/Map2.png"
+            alt="Map of Ticino"
+            fill
+            // REMOVED: "sepia" filter to keep colors true and dark
+            className="object-contain" 
+            priority
+            draggable={false}
+          />
 
-          {/* Markers Layer */}
-          {properties.map((prop) => (
-            <div 
-              key={prop.id}
-              onMouseEnter={() => !isMobile && setHoveredProp(prop)}
-              onMouseLeave={() => !isMobile && setHoveredProp(null)}
+          {/* VIGNETTE: Kept for focus, matches black bg */}
+          <div className="absolute inset-0 bg-radial-gradient-to-t from-black/20 via-transparent to-black/20 pointer-events-none mix-blend-overlay"></div>
+          
+          {/* REMOVED: The Beige Texture Overlay (bg-[#f4ecd8]) was here. 
+             Removing it ensures no "milky/grey" haze. */}
+        </motion.div>
+
+        {/* --- PROPERTY MARKERS LAYER --- */}
+        <div className="absolute inset-0 w-full h-full" style={{ transform: "translateZ(30px)" }}>
+          {properties.map((property, i) => (
+            <motion.div
+              key={property.id}
+              className="absolute"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 + (i * 0.1) }}
+              style={{
+                left: `${property.mapCoordinates.x}%`,
+                top: `${property.mapCoordinates.y}%`,
+              }}
             >
               <MapMarker 
-                property={prop} 
-                isMobile={isMobile}
+                property={property} 
                 onClick={handleMarkerClick}
+                isMobile={isMobile}
               />
-            </div>
+            </motion.div>
           ))}
-
-          {/* Desktop Hover Card (Floating) */}
-          <AnimatePresence>
-            {hoveredProp && !isMobile && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="absolute z-50 w-72 bg-white rounded-xl shadow-xl overflow-hidden pointer-events-none"
-                style={{ 
-                  left: `calc(${hoveredProp.mapX}% + 20px)`, 
-                  top: `calc(${hoveredProp.mapY}% - 100px)` 
-                  // Logic to flip if too close to right edge omitted for brevity
-                }}
-              >
-                <div className="relative h-32 w-full">
-                  <Image 
-                    src={hoveredProp.image} 
-                    alt={hoveredProp.name} 
-                    fill 
-                    className="object-cover"
-                  />
-                  <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-sm">
-                    {hoveredProp.type}
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-serif text-lg text-gray-900">{hoveredProp.name}</h3>
-                  <div className="flex gap-2 mt-2">
-                    {hoveredProp.highlights.slice(0, 2).map((h, i) => (
-                      <span key={i} className="text-[10px] bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                        {h}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="mt-3 text-xs text-gray-400 font-medium">Click to explore</div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
-        
-        <p className="md:hidden text-center text-xs text-gray-400 mt-4 uppercase tracking-widest">
-          Pinch to Zoom • Tap to Explore
-        </p>
-      </div>
+      </motion.div>
 
-      {/* Mobile Drawer (Bottom Sheet) */}
-      <Drawer open={!!selectedProp} onOpenChange={(open) => !open && setSelectedProp(null)}>
-        <DrawerContent className="bg-[#FAF9F6]">
-          {selectedProp && (
-            <div className="mx-auto w-full max-w-sm">
-              <div className="relative h-48 w-full rounded-t-lg overflow-hidden mt-4">
-                <Image 
-                  src={selectedProp.image} 
-                  alt={selectedProp.name} 
-                  fill 
-                  className="object-cover"
-                />
+      {/* Mobile Bottom Sheet */}
+      {isMobile && selectedProperty && (
+        // CHANGED: text-stone-800 -> text-white (was invisible on black bg)
+        <div className="absolute bottom-4 left-4 right-4 bg-zinc-900/95 backdrop-blur-md p-4 rounded-xl shadow-2xl z-50 border border-white/10 animate-in slide-in-from-bottom-10 fade-in">
+           <div className="flex gap-4">
+              <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 shadow-sm border border-white/10">
+                 <Image src={selectedProperty.image} alt="prop" fill className="object-cover" />
               </div>
-              <DrawerHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span className="text-xs uppercase tracking-widest text-gray-500">{selectedProp.type}</span>
-                    <DrawerTitle className="font-serif text-2xl mt-1">{selectedProp.name}</DrawerTitle>
-                  </div>
-                  <div className="text-right">
-                    <span className="block text-xs text-gray-400">From</span>
-                    <span className="font-medium">{selectedProp.priceStart}</span>
-                  </div>
-                </div>
-                <DrawerDescription className="mt-2 line-clamp-2">
-                  {selectedProp.description}
-                </DrawerDescription>
-              </DrawerHeader>
-              <DrawerFooter>
-                <Link href={`/properties/${selectedProp.slug}`} className="w-full">
-                  <Button className="w-full bg-slate-900 text-white hover:bg-slate-800">
-                    View Property Details
-                  </Button>
-                </Link>
-                <DrawerClose asChild>
-                  <Button variant="outline">Close</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </div>
-          )}
-        </DrawerContent>
-      </Drawer>
+              <div>
+                 {/* Fixed Text Color */}
+                 <h3 className="font-serif text-lg text-white">{selectedProperty.name}</h3>
+                 <button 
+                    className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mt-2 hover:text-white"
+                    onClick={() => setSelectedProperty(null)}
+                 >
+                    Close
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
     </div>
   );
 }

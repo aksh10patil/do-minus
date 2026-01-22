@@ -69,26 +69,20 @@ export default function PropertyPage({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Sidebar / Location */}
-        <div className="space-y-6">
-          <div className="bg-[#FAF9F6] p-6 rounded-xl border border-[#E6DFD5]">
-            <span className="block text-sm text-gray-400 uppercase tracking-widest mb-1">Starting From</span>
-            <span className="font-serif text-3xl text-slate-900">{property.priceStart}</span>
-            <span className="text-sm text-gray-500"> / night</span>
-            <Button className="w-full mt-6 bg-slate-900 text-white">Book Now</Button>
-          </div>
-
-          <div className="rounded-xl overflow-hidden h-64 relative border border-slate-200">
-             {/* Google Maps Embed (Only loads on detail page) */}
-            <iframe
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${property.lat},${property.lng}`}
-            ></iframe>
-          </div>
-        </div>
+       
+<div className="bg-[#FAF9F6] p-6 rounded-xl border border-[#E6DFD5]">
+  <h3 className="font-serif text-xl mb-1">{property.name}</h3>
+  <p className="text-sm text-slate-500 mb-4">{property.address}</p> {/* NEW */}
+  
+  <div className="h-px w-full bg-slate-200 my-4" />
+  
+  <span className="block text-sm text-gray-400 uppercase tracking-widest mb-1">Starting From</span>
+  <span className="font-serif text-3xl text-slate-900">{property.priceStart}</span>
+  
+  <Button className="w-full mt-6 bg-slate-900 text-white hover:bg-slate-800 transition-colors">
+    Book Now
+  </Button>
+</div>
       </div>
     </div>
   );

@@ -199,7 +199,7 @@ export default function Home() {
           <div className="md:col-span-7 h-[50vh] md:h-[70vh] w-full relative grayscale hover:grayscale-0 transition-all duration-700 ease-in-out">
             <FadeIn delay={0.3} className="w-full h-full">
               {/* Replace with your own image path */}
-              <ParallaxImage src="/houses/house3.jpg" alt="Interior design detail" />
+              <ParallaxImage src="/properties/read_our_story.png" alt="Interior design detail" />
             </FadeIn>
           </div>
 

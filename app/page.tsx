@@ -12,13 +12,13 @@ import { properties } from "@/lib/data";
 import CuratedSpaces from "@/components/landing/CuratedSpaces";
 
 // --- FONTS ---
-const outfit = Outfit({ 
+const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
-  weight: ["300", "400", "500", "600"] 
+  weight: ["300", "400", "500", "600"]
 });
 
-const playfair = Playfair_Display({ 
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair"
 });
@@ -29,7 +29,7 @@ const playfair = Playfair_Display({
 const FadeIn = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
-  
+
   return (
     <motion.div
       ref={ref}
@@ -69,12 +69,12 @@ export default function Home() {
 
   return (
     <main className={`min-h-screen w-full bg-[#1a1818] text-[#e5e5e5] ${outfit.variable} ${playfair.variable} font-sans selection:bg-[#Cfbba3] selection:text-black`}>
-      
+
       {/* =========================================
           HERO SECTION (Your Existing Code) 
          ========================================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen w-full relative z-10 bg-[#1a1818]">
-        
+
         {/* LEFT COLUMN */}
         <div className="order-1 flex flex-col justify-between p-6 md:p-12 relative z-10 h-full border-r border-white/5">
           <header className="flex w-full items-center justify-between">
@@ -90,7 +90,7 @@ export default function Home() {
                 </button>
               ))}
             </nav>
-            <button 
+            <button
               onClick={() => setIsMapOpen(true)}
               className="md:hidden px-4 py-2 text-[9px] font-bold tracking-[0.2em] uppercase bg-white/10 rounded-full border border-white/5"
             >
@@ -100,34 +100,34 @@ export default function Home() {
 
           <div className="flex flex-col justify-center items-center text-center flex-grow space-y-6 md:space-y-8 py-8">
             <div className="flex gap-3 justify-center">
-                {properties.slice(0, 3).map((prop, idx) => (
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.2 + idx * 0.1 }}
-                      key={idx} 
-                      className="group relative w-14 md:w-16 aspect-[3/4] overflow-hidden border border-white/10 grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer"
-                    >
-                          <Image src={prop.image} alt="preview" fill className="object-cover"/>
-                    </motion.div>
-                ))}
+              {properties.slice(0, 3).map((prop, idx) => (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 + idx * 0.1 }}
+                  key={idx}
+                  className="group relative w-14 md:w-16 aspect-[3/4] overflow-hidden border border-white/10 grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer"
+                >
+                  <Image src={prop.image} alt="preview" fill className="object-cover" />
+                </motion.div>
+              ))}
             </div>
 
             <div className="space-y-2">
-              <motion.h1 
+              <motion.h1
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
                 className="font-sans text-3xl md:text-5xl font-light leading-none tracking-tight text-white uppercase"
               >
                 Do-Minus
               </motion.h1>
-              <motion.h2 
+              <motion.h2
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
                 className="font-sans text-2xl md:text-4xl font-light leading-none tracking-tight text-white/80 uppercase"
               >
                 Collection
               </motion.h2>
               <div className="h-px w-16 bg-gradient-to-r from-transparent via-stone-700 to-transparent mx-auto my-3"></div>
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
                 className="text-[9px] md:text-[10px] tracking-[0.3em] text-stone-400 uppercase font-medium"
               >
@@ -142,15 +142,15 @@ export default function Home() {
             </div>
 
             <p className="hidden md:block max-w-sm text-center text-stone-500 font-serif text-xs leading-loose tracking-wide">
-                Exclusive spaces combining nature, wellbeing, and design. 
-                Historic buildings meticulously restored by Riccarda Guidotti and Andrea Frapolli.
+              Exclusive spaces combining nature, wellbeing, and design.
+              Historic buildings meticulously restored by Riccarda Guidotti and Andrea Frapolli.
             </p>
           </div>
 
           <div className="flex justify-center md:justify-between items-end text-[9px] tracking-[0.3em] text-stone-600 uppercase">
-             <span className="hidden md:block">ticino, switzerland</span>
-             <span>Scroll Down</span>
-             <span className="hidden md:block">+41 76 364 85 45</span>
+            <span className="hidden md:block">ticino, switzerland</span>
+            <span>Scroll Down</span>
+            <span className="hidden md:block">+41 76 364 85 45</span>
           </div>
         </div>
 
@@ -166,23 +166,23 @@ export default function Home() {
          ========================================= */}
       <section className="relative w-full bg-[#121111] py-24 md:py-40 px-6 md:px-12 border-t border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 items-center">
-          
+
           {/* Text Content */}
           <div className="md:col-span-5 space-y-8">
             <FadeIn>
               <span className="text-[#Cfbba3] text-[10px] uppercase tracking-[0.3em] font-bold">The Philosophy</span>
               <h2 className="font-serif text-3xl md:text-5xl text-white leading-tight mt-4">
-                Silence as the <br/> ultimate luxury.
+                Silence as the <br /> ultimate luxury.
               </h2>
             </FadeIn>
-            
+
             <FadeIn delay={0.2}>
               <div className="w-12 h-px bg-white/20 my-6"></div>
               <p className="text-stone-400 font-serif text-sm md:text-base leading-loose">
-                In a world of constant noise, we offer a sanctuary of stillness. 
-                Our properties are not just hotels; they are carefully curated 
-                experiences designed to reconnect you with the rhythms of nature. 
-                Using raw materials—stone, wood, and light—we craft spaces that 
+                In a world of constant noise, we offer a sanctuary of stillness.
+                Our properties are not just hotels; they are carefully curated
+                experiences designed to reconnect you with the rhythms of nature.
+                Using raw materials—stone, wood, and light—we craft spaces that
                 breathe.
               </p>
             </FadeIn>
@@ -198,8 +198,8 @@ export default function Home() {
           {/* Parallax Image */}
           <div className="md:col-span-7 h-[50vh] md:h-[70vh] w-full relative grayscale hover:grayscale-0 transition-all duration-700 ease-in-out">
             <FadeIn delay={0.3} className="w-full h-full">
-               {/* Replace with your own image path */}
-               <ParallaxImage src="/houses/house3.jpg" alt="Interior design detail" />
+              {/* Replace with your own image path */}
+              <ParallaxImage src="/houses/house3.jpg" alt="Interior design detail" />
             </FadeIn>
           </div>
 
@@ -220,14 +220,14 @@ export default function Home() {
         {/* Row 1: Image Left, Text Right */}
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="h-[50vh] md:h-[80vh] relative grayscale hover:grayscale-0 transition-all duration-700">
-             <Image src="/houses/house2.jpg" alt="Dining" fill className="object-cover" />
+            <Image src="/properties/dining.png" alt="Dining" fill className="object-cover" />
           </div>
           <div className="flex items-center justify-center p-12 md:p-24 bg-[#151414]">
             <FadeIn className="max-w-md text-center md:text-left">
               <h3 className="font-serif text-2xl md:text-4xl text-white mb-6">Seasonal Dining</h3>
               <p className="text-stone-400 text-sm leading-loose mb-8 font-serif">
-                Our kitchen follows the seasons. We source ingredients from the 
-                valleys of Ticino, preparing simple, honest dishes that honor 
+                Our kitchen follows the seasons. We source ingredients from the
+                valleys of Ticino, preparing simple, honest dishes that honor
                 local traditions while embracing modern flavors.
               </p>
               <button className="text-[10px] uppercase tracking-[0.2em] border border-white/20 px-8 py-3 hover:bg-white hover:text-black transition-all">
@@ -243,8 +243,8 @@ export default function Home() {
             <FadeIn className="max-w-md text-center md:text-left">
               <h3 className="font-serif text-2xl md:text-4xl text-white mb-6">Alpine Wellness</h3>
               <p className="text-stone-400 text-sm leading-loose mb-8 font-serif">
-                Immerse yourself in our private stone spas. Heated by wood fire, 
-                cooled by mountain air. A ritual of water and warmth designed 
+                Immerse yourself in our private stone spas. Heated by wood fire,
+                cooled by mountain air. A ritual of water and warmth designed
                 to heal the body and calm the mind.
               </p>
               <button className="text-[10px] uppercase tracking-[0.2em] border border-white/20 px-8 py-3 hover:bg-white hover:text-black transition-all">
@@ -253,7 +253,7 @@ export default function Home() {
             </FadeIn>
           </div>
           <div className="h-[50vh] md:h-[80vh] relative grayscale hover:grayscale-0 transition-all duration-700 order-1 md:order-2">
-             <Image src="/houses/house4.jpg" alt="Spa" fill className="object-cover" />
+            <Image src="/properties/spa.png" alt="Spa" fill className="object-cover" />
           </div>
         </div>
       </section>
@@ -264,11 +264,11 @@ export default function Home() {
          ========================================= */}
       <footer className="w-full bg-[#0a0a0a] pt-24 pb-12 px-6 md:px-12 border-t border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-24">
-          
+
           <div className="md:col-span-2 space-y-6">
             <h2 className="font-sans text-3xl font-light uppercase tracking-tight text-white">Do-Minus</h2>
             <p className="text-stone-500 font-serif text-sm max-w-sm">
-              A collection of architectural retreats in the heart of Ticino. 
+              A collection of architectural retreats in the heart of Ticino.
               Where heritage meets contemporary design.
             </p>
           </div>
@@ -292,13 +292,13 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        
+
         <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] uppercase tracking-widest text-stone-600">
-           <span>© 2026 Do-Minus Collection.</span>
-           <div className="flex gap-6">
-             <a href="#">Instagram</a>
-             <a href="#">Facebook</a>
-           </div>
+          <span>© 2026 Do-Minus Collection.</span>
+          <div className="flex gap-6">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+          </div>
         </div>
       </footer>
 
@@ -310,7 +310,7 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-8">
           {/* Note: changed bg to black/90 for better focus */}
           <div className="relative w-full h-full max-w-[95vw] max-h-[95vh] bg-black rounded-2xl shadow-2xl overflow-hidden border border-white/10">
-            
+
             <button
               onClick={() => setIsMapOpen(false)}
               className="absolute top-4 right-4 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white transition-all duration-300 backdrop-blur-sm border border-white/10"
